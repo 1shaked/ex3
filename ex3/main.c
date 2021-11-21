@@ -99,10 +99,18 @@ int main(int argc, const char * argv[]) {
                     break;
             }
             // TODO: need to check what to do about the removoal
-            // int minNumberToRemove = size / 2;
-            // int upperNumberToRemove = size * size;
-            
-            
+            int minNumberToRemove = size / 2;
+            if (playersNumber >= minNumberToRemove) {
+                int upperNumberToRemove = size * size;
+                int amountToRemove;
+                // calc the amount of players to remove
+                if (upperNumberToRemove <= playersNumber) amountToRemove = upperNumberToRemove - minNumberToRemove;
+                else amountToRemove = playersNumber - minNumberToRemove;
+                playersNumber = playersNumber - amountToRemove;
+                // the amount to go to charity and bank to move it to be wiht a function
+                charity = charity + AmountToCharity(playersNumber, amountToRemove, bank);
+                bank = AmountToBank(playersNumber, amountToRemove, bank);
+            }
         }
         else if (inputUser == Gganbu) {
             printf("Gganbu");
@@ -111,10 +119,12 @@ int main(int argc, const char * argv[]) {
             scanf("%d", &deathNumber);
             // logic to remove the amount of players
             int playersToRemove = playersNumber / deathNumber;
-            // need to check there is may be a smarter way with math look for
-            // number n power of 1 and check the max n^k and there will be k items to remove
-            
-            printf("%d", playersToRemove);
+            int i = 0;
+            for (; i < playersNumber; i++) {
+                int mulNumber = deathNumber * i;
+                if (mulNumber > playersNumber) break;
+            }
+            printf("%d amount of players to remove %d", playersToRemove, i);
             
         }
         
