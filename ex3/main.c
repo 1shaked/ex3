@@ -38,7 +38,7 @@ int main(int argc, const char * argv[]) {
 
     int userInput = 0;
     scanf("%d", &userInput);
-    printf("user input is %d", userInput);
+    printf("user input is %d\n", userInput);
     // printf("%d", Inputs[userInput]);
     enum Inputs {Statues = 1,Dalgona = 2,Gganbu = 3,Bridge = 4,Exist=-1};
     enum Inputs inputUser = userInput;
@@ -114,18 +114,22 @@ int main(int argc, const char * argv[]) {
         }
         else if (inputUser == Gganbu) {
             printf("Gganbu");
-            printf("Death number?");
+            printf("Death number?\n");
             int deathNumber;
             scanf("%d", &deathNumber);
             // logic to remove the amount of players
             int playersToRemove = playersNumber / deathNumber;
-            int i = 0;
+            int i = 1;
             for (; i < playersNumber; i++) {
                 int mulNumber = deathNumber * i;
                 if (mulNumber > playersNumber) break;
             }
-            printf("%d amount of players to remove %d", playersToRemove, i);
-            
+            printf("%d amount of players to remove %d", playersToRemove, i); 
+            // TODO: need to check if devision is good enough
+            playersNumber = playersNumber - i;
+            // the amount to go to charity and bank to move it to be wiht a function
+            charity = charity + AmountToCharity(playersNumber, i, bank);
+            bank = AmountToBank(playersNumber, i, bank); 
         }
         
     }
