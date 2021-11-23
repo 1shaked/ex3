@@ -13,8 +13,8 @@
 char ToUpper(char v);
 int IsCommandValid(int v);
 int IsNumberValidFromStatus(int v);
-int AmountToBank(int totalPlayers, int playersRemoved, int bank);
-int AmountToCharity(int totalPlayers, int playersRemoved, int bank);
+int AmountToBank(int totalPlayers, int playersRemoved, int bank , int charity);
+int AmountToCharity(int totalPlayers, int playersRemoved, int bank, int charity);
 void PrintRepete(int amount, char letter);
 void PrintSqure(int size);
 void PrintStart(int size);
@@ -49,6 +49,7 @@ int main(int argc, const char * argv[]) {
     int bank = 0;
     while (inputUser != Exist) {
         int totalToRemove = 0;
+        int tempCharity;
         if (inputUser == Statues) {
             //region Status
             printf("Statues! %d\n", playersNumber);
@@ -70,8 +71,9 @@ int main(int argc, const char * argv[]) {
             }
             playersNumber = playersNumber - totalToRemove;
             // the amount to go to charity and bank to move it to be wiht a function
-            charity = charity + AmountToCharity(playersNumber, totalToRemove, bank);
-            bank = AmountToBank(playersNumber, totalToRemove, bank);
+            tempCharity = charity;
+            charity = AmountToCharity(playersNumber, totalToRemove, bank, charity);
+            bank = AmountToBank(playersNumber, totalToRemove, bank, tempCharity);
         }
         else if (inputUser == Dalgona) {
             printf("Dalgona\n");
@@ -79,7 +81,7 @@ int main(int argc, const char * argv[]) {
             printf("1 – square, 2 – triangle, 3 – star\n");
             int shape;
             scanf("%d", &shape);
-            printf("Enter Size (10-20):");
+            printf("Enter Size (10-20):\n");
             // gettting the size while the user did not enter number between 10 to 20 re ask him
             int size = 0;
             while (!(size > 9 && size < 21)) {
@@ -110,8 +112,9 @@ int main(int argc, const char * argv[]) {
                 totalToRemove = playersNumber - remainPlayers;
                 playersNumber = playersNumber - totalToRemove;
                 // the amount to go to charity and bank to move it to be wiht a function
-                charity = charity + AmountToCharity(playersNumber, totalToRemove, bank);
-                bank = AmountToBank(playersNumber, totalToRemove, bank);
+                tempCharity = charity;
+                charity = AmountToCharity(playersNumber, totalToRemove, bank, charity);
+                bank = AmountToBank(playersNumber, totalToRemove, bank, tempCharity);
             }
         }
         else if (inputUser == Gganbu) {
@@ -125,8 +128,9 @@ int main(int argc, const char * argv[]) {
             totalToRemove = playersNumber - playersRemin;
             playersNumber = playersRemin;
             // the amount to go to charity and bank to move it to be wiht a function
-            charity = charity + AmountToCharity(playersNumber, totalToRemove, bank);
-            bank = AmountToBank(playersNumber, totalToRemove, bank);
+            tempCharity = charity;
+            charity = AmountToCharity(playersNumber, totalToRemove, bank, charity);
+            bank = AmountToBank(playersNumber, totalToRemove, bank, tempCharity);
         }
         else if (inputUser == Bridge) {
             printf("Bridge!\n");
@@ -134,7 +138,6 @@ int main(int argc, const char * argv[]) {
             // temp is needed in order to get the min and the max from num1 and num2
             int minNumber, maxNumber;
             scanf("%d %d", &minNumber, &maxNumber);
-            printf("num 1 = %d  |||||  num 2 = %d", minNumber, maxNumber);
             if (minNumber > maxNumber) {
                 // when the input is first the big number and then the smaller one
                 int temp = maxNumber;
@@ -159,15 +162,15 @@ int main(int argc, const char * argv[]) {
             }
             // the amount to go to charity and bank to move it to be wiht a function
             playersNumber = playersNumber - playersToRemove;
-            charity = charity + AmountToCharity(playersNumber, playersToRemove, bank);
-            bank = AmountToBank(playersNumber, playersToRemove, bank);
+            tempCharity = charity;
+            charity = AmountToCharity(playersNumber, playersToRemove, bank, charity);
+            bank = AmountToBank(playersNumber, playersToRemove, bank, tempCharity);
         }
         printf("There are %d survival(s), and they got %d each. The amount of the rest is: %d$.\n", playersNumber, bank, charity);
         printf("Choose 1 for Statues, 2 for Dalgona, 3 for Gganbu, 4 for Bridge, -1 for exit\n");
         if (playersNumber == 0) break;
         userInput = 0;
         scanf("%d", &userInput);
-        printf("%d" ,userInput);
         inputUser = userInput;
     }
     printf("Thank for playing");
@@ -188,14 +191,15 @@ int IsCommandValid(int v) {
 int IsNumberValidFromStatus(int v) {
     return v > 0 && v < 10;
 }
-int AmountToBank(int totalPlayers, int playersRemoved, int bank) {
-    int totalBankMoeny = (playersRemoved + totalPlayers) * bank;
+int AmountToBank(int totalPlayers, int playersRemoved, int bank, int charity) {
+    // calc the amount of moeny before the removal;
+    int totalBankMoeny = ( (playersRemoved + totalPlayers) * bank) + charity;
     int totalMoeny = playersRemoved * AMOUNT_PER_PLAYER_REMOVED + totalBankMoeny;
     return totalMoeny / totalPlayers ;
 }
 
-int AmountToCharity(int totalPlayers, int playersRemoved, int bank) {
-    int totalBankMoeny = (playersRemoved + totalPlayers) * bank;
+int AmountToCharity(int totalPlayers, int playersRemoved, int bank, int charity) {
+    int totalBankMoeny = (playersRemoved + totalPlayers) * bank + charity;
     int totalMoeny = playersRemoved * AMOUNT_PER_PLAYER_REMOVED + totalBankMoeny;
     return totalMoeny % totalPlayers ;
 }
