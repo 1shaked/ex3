@@ -6,7 +6,8 @@
 //
 
 #include <stdio.h>
-#include <ctype.h>
+// #include <ctype.h>
+#include <math.h>
 
 #define AMOUNT_PER_PLAYER_REMOVED 10000
 char ToUpper(char v);
@@ -18,6 +19,7 @@ void PrintRepete(int amount, char letter);
 void PrintSqure(int size);
 void PrintTriangle(int size);
 void PrintStart(int size);
+
 
 int main(int argc, const char * argv[]) {
     // get first letter of first and last name
@@ -117,21 +119,51 @@ int main(int argc, const char * argv[]) {
             printf("Death number?\n");
             int deathNumber;
             scanf("%d", &deathNumber);
+            // TODO: need to check what to do when the input is zero;
             // logic to remove the amount of players
             int playersToRemove = playersNumber / deathNumber;
-            int i = 1;
-            for (; i < playersNumber; i++) {
-                int mulNumber = deathNumber * i;
-                if (mulNumber > playersNumber) break;
-            }
-            printf("%d amount of players to remove %d", playersToRemove, i); 
-            // TODO: need to check if devision is good enough
-            playersNumber = playersNumber - i;
+            playersNumber = playersNumber - playersToRemove;
             // the amount to go to charity and bank to move it to be wiht a function
-            charity = charity + AmountToCharity(playersNumber, i, bank);
-            bank = AmountToBank(playersNumber, i, bank); 
+            charity = charity + AmountToCharity(playersNumber, playersToRemove, bank);
+            bank = AmountToBank(playersNumber, playersToRemove, bank); 
         }
-        
+        else if (inputUser == Bridge) {
+            printf("Bridge!\n");
+            printf("Enter two numbers:\n");
+            // temp is needed in order to get the min and the max from num1 and num2
+            int minNumber, maxNumber;
+            scanf("%d %d", &minNumber, &maxNumber);
+            printf("num 1 = %d  |||||  num 2 = %d", minNumber, maxNumber);
+            if (minNumber > maxNumber) {
+                // when the input is first the big number and then the smaller one
+                int temp = maxNumber;
+                maxNumber = minNumber;
+                minNumber = temp;
+            }
+            // when there less players then the number inputed
+            if (maxNumber > playersNumber) maxNumber = playersNumber;
+            int playersToRemove, playersRemain = 0;
+            if (minNumber > playersNumber) {
+                playersToRemove = playersNumber;
+            } else {
+                // in order to calculate the amount of players remin
+                int minPrimoNumber = log2(minNumber) + 1;
+                int maxPrimoNumber = log2(maxNumber);
+                playersRemain = maxPrimoNumber - minPrimoNumber;
+                playersToRemove = playersNumber - playersRemain;
+            }
+            if (playersNumber > 0) {
+                printf("playersRemain == %d \n" , playersRemain);
+                
+            } else printf("None");
+            // the amount to go to charity and bank to move it to be wiht a function
+            playersNumber = playersNumber - playersToRemove;
+            charity = charity + AmountToCharity(playersNumber, playersToRemove, bank);
+            bank = AmountToBank(playersNumber, playersToRemove, bank);
+            if (playersNumber == 0) {
+                break;
+            }
+        }
     }
     // int d = int(firstName) - 30 // enum Inputs {Statues = 1, Dalgona = 2, Gganbu = 3, Bridge = 4, Exist = -1};
     // toupper(firstName);
