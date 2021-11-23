@@ -17,8 +17,9 @@ int AmountToBank(int totalPlayers, int playersRemoved, int bank);
 int AmountToCharity(int totalPlayers, int playersRemoved, int bank);
 void PrintRepete(int amount, char letter);
 void PrintSqure(int size);
-void PrintTriangle(int size);
 void PrintStart(int size);
+void PrintTriangle(int size);
+int GetMersenneNumber(int limit, int startAt, int includeLimit);
 
 
 int main(int argc, const char * argv[]) {
@@ -37,20 +38,17 @@ int main(int argc, const char * argv[]) {
     printf("Hello %c. %c, welcome to Squid Game!\n", firstName, lastName);
     // starting the game
     printf("Choose 1 for Statues, 2 for Dalgona, 3 for Gganbu, 4 for Bridge, -1 for exit\n");
-
     int userInput = 0;
     scanf("%d", &userInput);
     printf("user input is %d\n", userInput);
     // printf("%d", Inputs[userInput]);
     enum Inputs {Statues = 1,Dalgona = 2,Gganbu = 3,Bridge = 4,Exist=-1};
     enum Inputs inputUser = userInput;
-    printf("%d", inputUser);
     int playersNumber = 456;
     int charity = 0;
     int bank = 0;
     while (inputUser != Exist) {
-        // first option
-        
+        int totalToRemove = 0;
         if (inputUser == Statues) {
             //region Status
             printf("Statues! %d\n", playersNumber);
@@ -62,10 +60,11 @@ int main(int argc, const char * argv[]) {
                 scanf("%d", &secondNumber);
             }
             // remove players which match that conditions
-            int totalToRemove = 0;
             int i = 0;
             for (;i < playersNumber; i++) {
-                if (i % firstNumber == 0 || secondNumber % 10 == i ) {
+                int reminder = i % firstNumber;
+                int digit = i % 10;
+                if (reminder == 0 ||  digit == secondNumber ) {
                     totalToRemove = totalToRemove + 1;
                 }
             }
@@ -73,7 +72,6 @@ int main(int argc, const char * argv[]) {
             // the amount to go to charity and bank to move it to be wiht a function
             charity = charity + AmountToCharity(playersNumber, totalToRemove, bank);
             bank = AmountToBank(playersNumber, totalToRemove, bank);
-            
         }
         else if (inputUser == Dalgona) {
             printf("Dalgona\n");
@@ -100,32 +98,35 @@ int main(int argc, const char * argv[]) {
                 default:
                     break;
             }
-            // TODO: need to check what to do about the removoal
-            int minNumberToRemove = size / 2;
+            int minNumberToRemove = size / 2 + 1;
+            int remainPlayers = 0;
+            // TODO: fix the filtring
             if (playersNumber >= minNumberToRemove) {
                 int upperNumberToRemove = size * size;
-                int amountToRemove;
+                // int amountToRemove;
                 // calc the amount of players to remove
-                if (upperNumberToRemove <= playersNumber) amountToRemove = upperNumberToRemove - minNumberToRemove;
-                else amountToRemove = playersNumber - minNumberToRemove;
-                playersNumber = playersNumber - amountToRemove;
+                if (upperNumberToRemove <= playersNumber) remainPlayers = upperNumberToRemove - minNumberToRemove + 1;
+                else remainPlayers = playersNumber - minNumberToRemove + 1;
+                totalToRemove = playersNumber - remainPlayers;
+                playersNumber = playersNumber - totalToRemove;
                 // the amount to go to charity and bank to move it to be wiht a function
-                charity = charity + AmountToCharity(playersNumber, amountToRemove, bank);
-                bank = AmountToBank(playersNumber, amountToRemove, bank);
+                charity = charity + AmountToCharity(playersNumber, totalToRemove, bank);
+                bank = AmountToBank(playersNumber, totalToRemove, bank);
             }
         }
         else if (inputUser == Gganbu) {
-            printf("Gganbu");
+            printf("Gganbu\n");
             printf("Death number?\n");
             int deathNumber;
             scanf("%d", &deathNumber);
-            // TODO: need to check what to do when the input is zero;
+            // TODO: need to check what to do when the input is zero; if (deathNumber == 0 ) playersToRemove = 0;
             // logic to remove the amount of players
-            int playersToRemove = playersNumber / deathNumber;
-            playersNumber = playersNumber - playersToRemove;
+            int playersRemin = playersNumber / deathNumber;
+            totalToRemove = playersNumber - playersRemin;
+            playersNumber = playersRemin;
             // the amount to go to charity and bank to move it to be wiht a function
-            charity = charity + AmountToCharity(playersNumber, playersToRemove, bank);
-            bank = AmountToBank(playersNumber, playersToRemove, bank); 
+            charity = charity + AmountToCharity(playersNumber, totalToRemove, bank);
+            bank = AmountToBank(playersNumber, totalToRemove, bank);
         }
         else if (inputUser == Bridge) {
             printf("Bridge!\n");
@@ -147,29 +148,29 @@ int main(int argc, const char * argv[]) {
                 playersToRemove = playersNumber;
             } else {
                 // in order to calculate the amount of players remin
-                int minPrimoNumber = log2(minNumber) + 1;
-                int maxPrimoNumber = log2(maxNumber);
-                playersRemain = maxPrimoNumber - minPrimoNumber;
+                int minMersenneNumber = GetMersenneNumber(minNumber, 0 , 1);
+                int maxMersenneNumber = GetMersenneNumber(maxNumber, minMersenneNumber , 0);
+                // calculate how many players remain and handle the edge case when there is no Mersenne in range
+                if (minMersenneNumber > maxMersenneNumber) {
+                    printf("None");
+                    playersRemain = 0;
+                } else playersRemain = maxMersenneNumber - minMersenneNumber + 1;
                 playersToRemove = playersNumber - playersRemain;
             }
-            if (playersNumber > 0) {
-                printf("playersRemain == %d \n" , playersRemain);
-                
-            } else printf("None");
             // the amount to go to charity and bank to move it to be wiht a function
             playersNumber = playersNumber - playersToRemove;
             charity = charity + AmountToCharity(playersNumber, playersToRemove, bank);
             bank = AmountToBank(playersNumber, playersToRemove, bank);
-            if (playersNumber == 0) {
-                break;
-            }
         }
+        printf("There are %d survival(s), and they got %d each. The amount of the rest is: %d$.\n", playersNumber, bank, charity);
+        printf("Choose 1 for Statues, 2 for Dalgona, 3 for Gganbu, 4 for Bridge, -1 for exit\n");
+        if (playersNumber == 0) break;
+        userInput = 0;
+        scanf("%d", &userInput);
+        printf("%d" ,userInput);
+        inputUser = userInput;
     }
-    // int d = int(firstName) - 30 // enum Inputs {Statues = 1, Dalgona = 2, Gganbu = 3, Bridge = 4, Exist = -1};
-    // toupper(firstName);
-    // toupper(firstName[0])
-    // insert code here...
-    // printf("Hello, World! %d %c %c \n", asciiFirstName, firstName, t);
+    printf("Thank for playing");
     return 0;
 }
 
@@ -274,4 +275,15 @@ void PrintStart(int size) {
     printf("\n");
     PrintStarLine(size, 2);
     PrintStarLine(size, 1);
+}
+int GetMersenneNumber(int limit, int startAt, int includeLimit) {
+    int n = startAt;
+    while (pow(2, n) - 1 < limit) {
+        n++;
+    }
+    if (!includeLimit) {
+        if (pow(2, n) - 1 == limit) return n;
+        return n - 1;
+    }
+    return n;
 }
