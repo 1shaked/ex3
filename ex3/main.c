@@ -36,16 +36,15 @@ int main(int argc, const char * argv[]) {
     scanf("%d", &userInput);
     enum Inputs {Statues = 1,Dalgona = 2,Gganbu = 3,Bridge = 4,Exist=-1};
     enum Inputs inputUser = userInput;
-    
     while (inputUser != Exist) {
+        int playersNumber = 456;
         int charity = 0;
         int bank = 0;
-        int playersNumber = 456;
         int totalToRemove = 0;
         int tempCharity;
         if (inputUser == Statues) {
             //region Status
-            printf("Statues! %d\n", playersNumber);
+            printf("Statues!\n");
             printf("Enter 2 numbers (single digit each):\n");
             int firstNumber = 0;
             int secondNumber = 0;
@@ -101,7 +100,7 @@ int main(int argc, const char * argv[]) {
             }
         }
         else if (inputUser == Gganbu) {
-            printf("Gganbu\n");
+            printf("Gganbu!\n");
             printf("Death number?\n");
             int deathNumber;
             scanf("%d", &deathNumber);
@@ -159,7 +158,7 @@ int main(int argc, const char * argv[]) {
         printf("There are %d survival(s), and they got %d$ each. The amount of the rest is: %d$.\n", playersNumber, bank, charity);
         // reget the user input
         printf("Choose 1 for Statues, 2 for Dalgona, 3 for Gganbu, 4 for Bridge, -1 for exit\n");
-        if (playersNumber == 0) break;
+        // if (playersNumber == 0) break;
         userInput = 0;
         scanf("%d", &userInput);
         inputUser = userInput;
