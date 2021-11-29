@@ -36,10 +36,11 @@ int main(int argc, const char * argv[]) {
     scanf("%d", &userInput);
     enum Inputs {Statues = 1,Dalgona = 2,Gganbu = 3,Bridge = 4,Exist=-1};
     enum Inputs inputUser = userInput;
-    int playersNumber = 456;
-    int charity = 0;
-    int bank = 0;
+    
     while (inputUser != Exist) {
+        int charity = 0;
+        int bank = 0;
+        int playersNumber = 456;
         int totalToRemove = 0;
         int tempCharity;
         if (inputUser == Statues) {
@@ -229,7 +230,7 @@ void PrintRepeate(int amount, char letter) {
 Function name: PrintSquare
 Input: int size
 Output: void
-The function operation: Print the Squre for the giving size
+The function operation: Print the Squre for the giving size.
 ************************************************************************/
 void PrintSquare(int size) {
     int i = 0;
@@ -329,7 +330,7 @@ Function name: GetMersenneNumber
 Input: int limit, int startAt, int includeLimit
 Output: void
 The function operation: This function will calculate the power of the number needed for the Mersenn number. StartAt param is in order to improve preformance and lower the loop count
-Example: limit = 10 startAt = 0 includeLimit = 0 will return 3 because the highest Mersenn number is 7
+Example: limit = 10 startAt = 0 includeLimit = 0 will return 3 because the highest Mersenn number is 7.
 Example: limit = 33 startAt = 2 includeLimit = 1 will return 6  because the highest Mersenn included in this limit is 63.
 ************************************************************************/
 int GetMersenneNumber(int limit, int startAt, int includeLimit) {
