@@ -24,8 +24,7 @@ int main(int argc, const char * argv[]) {
     printf("Hello, what is the first letter of your name?\n");
     char firstName;
     char lastName;
-    scanf(" %c", &firstName);
-    scanf(" %c", &lastName);
+    scanf("%c %c", &firstName, &lastName);
     // conveting to upper case
     firstName = ToUpper(firstName);
     lastName = ToUpper(lastName);
@@ -34,15 +33,15 @@ int main(int argc, const char * argv[]) {
     printf("Choose 1 for Statues, 2 for Dalgona, 3 for Gganbu, 4 for Bridge, -1 for exit\n");
     int userInput = 0;
     scanf("%d", &userInput);
-    enum Inputs {Statues = 1,Dalgona = 2,Gganbu = 3,Bridge = 4,Exist=-1};
-    enum Inputs inputUser = userInput;
-    while (inputUser != Exist) {
+    // enum Inputs {Statues = 1,Dalgona = 2,Gganbu = 3,Bridge = 4,Exist=-1};
+    // enum Inputs inputUser = userInput;
+    while (userInput != -1) {
         int playersNumber = 456;
         int charity = 0;
         int bank = 0;
         int totalToRemove = 0;
         int tempCharity;
-        if (inputUser == Statues) {
+        if (userInput == 1) {
             //region Status
             printf("Statues!\n");
             printf("Enter 2 numbers (single digit each):\n");
@@ -63,7 +62,7 @@ int main(int argc, const char * argv[]) {
             }
             playersNumber = playersNumber - totalToRemove;
         }
-        else if (inputUser == Dalgona) {
+        else if (userInput == 2) {
             printf("Dalgona!\n");
             printf("What shape do you want to pick?\n");
             printf("1 - square, 2 - triangle, 3 - star\n");
@@ -99,7 +98,7 @@ int main(int argc, const char * argv[]) {
                 playersNumber = playersNumber - totalToRemove;
             }
         }
-        else if (inputUser == Gganbu) {
+        else if (userInput == 3) {
             printf("Gganbu!\n");
             printf("Death number?\n");
             int deathNumber;
@@ -110,7 +109,7 @@ int main(int argc, const char * argv[]) {
             totalToRemove = playersNumber - playersRemin;
             playersNumber = playersRemin;
         }
-        else if (inputUser == Bridge) {
+        else if (userInput == 4) {
             printf("Bridge!\n");
             printf("Enter two numbers:\n");
             // temp is needed in order to get the min and the max from num1 and num2
@@ -159,9 +158,9 @@ int main(int argc, const char * argv[]) {
         // reget the user input
         printf("Choose 1 for Statues, 2 for Dalgona, 3 for Gganbu, 4 for Bridge, -1 for exit\n");
         // if (playersNumber == 0) break;
-        userInput = 0;
+        // userInput = 0;
         scanf("%d", &userInput);
-        inputUser = userInput;
+        // inputUser = userInput;
     }
     printf("Thank you, %c. %c, have a nice day, the World is Fair!\n", firstName, lastName);
     return 0;
@@ -171,7 +170,7 @@ int main(int argc, const char * argv[]) {
 Function name: ToUpper
 Input: char
 Output: char
-The function operation: take in char and make hime upper case a to A
+The function operation: take in char and make it upper case a to A
 ************************************************************************/
 char ToUpper(char v) {
     int letterAscii = v;
@@ -200,6 +199,7 @@ int AmountToBank(int totalPlayers, int playersRemoved, int bank, int charity) {
     // calc the amount of moeny before the removal;
     int totalBankMoney = ( (playersRemoved + totalPlayers) * bank) + charity;
     int totalMoney = playersRemoved * AMOUNT_PER_PLAYER_REMOVED + totalBankMoney;
+    if (totalPlayers == 0) return 0;
     return totalMoney / totalPlayers ;
 }
 /*************************************************************************
@@ -211,6 +211,7 @@ The function operation: Calc the amount of moeny the Charity will have
 int AmountToCharity(int totalPlayers, int playersRemoved, int bank, int charity) {
     int totalBankMoney = (playersRemoved + totalPlayers) * bank + charity;
     int totalMoney = playersRemoved * AMOUNT_PER_PLAYER_REMOVED + totalBankMoney;
+    if (totalPlayers == 0) return totalMoney;
     return totalMoney % totalPlayers ;
 }
 /*************************************************************************

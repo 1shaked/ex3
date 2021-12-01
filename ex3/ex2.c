@@ -103,7 +103,6 @@ int main(int argc, const char * argv[]) {
             printf("Death number?\n");
             int deathNumber;
             scanf("%d", &deathNumber);
-            // TODO: need to check what to do when the input is zero; if (deathNumber == 0 ) playersToRemove = 0;
             // logic to remove the amount of players
             int playersRemin = playersNumber / deathNumber;
             totalToRemove = playersNumber - playersRemin;
@@ -199,6 +198,7 @@ int AmountToBank(int totalPlayers, int playersRemoved, int bank, int charity) {
     // calc the amount of moeny before the removal;
     int totalBankMoney = ( (playersRemoved + totalPlayers) * bank) + charity;
     int totalMoney = playersRemoved * AMOUNT_PER_PLAYER_REMOVED + totalBankMoney;
+    if (totalPlayers == 0) return 0;
     return totalMoney / totalPlayers ;
 }
 /*************************************************************************
@@ -210,6 +210,7 @@ The function operation: Calc the amount of moeny the Charity will have
 int AmountToCharity(int totalPlayers, int playersRemoved, int bank, int charity) {
     int totalBankMoney = (playersRemoved + totalPlayers) * bank + charity;
     int totalMoney = playersRemoved * AMOUNT_PER_PLAYER_REMOVED + totalBankMoney;
+    if (totalPlayers == 0) return totalMoney;
     return totalMoney % totalPlayers ;
 }
 /*************************************************************************
